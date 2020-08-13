@@ -1,0 +1,21 @@
+graph G {
+    node [fontname = "DejaVuSans"];
+
+    A [ label = "A" ];
+    B [ label = "B" ];
+    C [ label = "C" ];
+    D [ label = "D" ];
+    Bcenter [style=invis, width=0, label=""];
+    E [ label = "E" ];
+    X [style=invis];
+    F [ label = "F" ];
+    G [ label = "G" ];
+    H [ label = "H" ];
+
+    A  -- { B C };
+    B -- { D E };
+    C -- X [style=invis];
+    C -- F;    
+    D -- { G H };
+    B -- Bcenter [style=invis];
+}

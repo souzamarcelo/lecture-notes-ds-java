@@ -1,0 +1,508 @@
+\newcommand{\templatesdir}{../../../templates}
+\newcommand{\template}{template-slides-est}
+\input{\templatesdir/\template/template}
+
+\title[Emparalhamento estável]{Emparelhamento estável}
+\subtitle{Formulação do problema, algoritmos e implementação}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Material de consulta}
+	\textbf{Leitura obrigatória:}
+	\begin{itemize}
+		\item Capítulo 1 de~\cite{KleinbergAndTardos2006} -- Introdução.
+	\end{itemize}
+	
+	\bigskip
+	
+	\textbf{Leitura complementar:}
+	\begin{itemize}
+		\item Capítulo 2 de~\cite{KleinbergAndTardos2006} -- Grafos.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}[t]{Problema do emparelhamento estável}
+	\begin{itemize}
+		\item Formalizado em 1962 por David Gale e Lloyd Shapley.
+		\item Algoritmo ganhou o Prêmio Nobel em Economia de 2012.
+		\item \textbf{Cenário:} candidatos a estágio $\times$ empresas de tecnologia.
+		\begin{itemize}
+			\item Candidatos possuem uma lista de preferência das empresas.
+			\item Empresas possuem uma lista de preferência dos candidatos.
+		\end{itemize}
+	\end{itemize}
+
+	\pause
+
+	\vspace{-15pt}
+
+	\begin{columns}
+		\captionsetup[table]{skip=0pt}
+		%\color{darkred}
+		\begin{column}[b]{0.48\textwidth}
+			\begin{table}
+				\centering
+				\scriptsize
+				\begin{tabular}{|c|c|c|c|}
+					\hline
+					\textbf{Candidato} & \textbf{1º} & \textbf{2º} & \textbf{3º} \\ \hline
+					 \textbf{Xavier}   &   Boston    &   Atlanta   &   Chicago   \\
+					 \textbf{Yolanda}  &   Atlanta   &   Boston    &   Chicago   \\
+					  \textbf{Zeus}    &   Atlanta   &   Boston    &   Chicago   \\ \hline
+				\end{tabular}
+				\caption{\scriptsize Preferências dos candidatos}
+			\end{table}
+		\end{column}
+		\begin{column}[b]{0.48\textwidth}
+			\begin{table}
+				\centering
+				\scriptsize
+				\begin{tabular}{|c|c|c|c|}
+					\hline
+					\textbf{Empresa} & \textbf{1º} & \textbf{2º} & \textbf{3º} \\ \hline
+					\textbf{Atlanta} &   Xavier    &   Yolanda   &    Zeus     \\
+					\textbf{Boston}  &   Yolanda   &   Xavier    &    Zeus     \\
+					\textbf{Chicago} &   Xavier    &   Yolanda   &    Zeus     \\ \hline
+				\end{tabular}
+				\caption{\scriptsize Preferências das empresas}
+			\end{table}
+		\end{column}
+	\end{columns}
+
+	\pause
+
+	\vspace{-20pt}
+
+	\begin{itemize}
+		\item \textbf{Problema:} Xavier aceita proposta de Atlanta, mas recusa após receber nova proposta de Boston. Boston contrata Xavier, mas o demite após receber o currículo de Yolanda. Xavier se obriga a ir para Chicago.
+	\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Problema do emparelhamento estável}
+	
+	\begin{itemize}
+		\item Dado um conjunto de candidatos e um conjunto de empresas, cada um com sua lista de preferências, encontra um \textbf{emparelhamento} de candidatos e empresas que seja \textbf{estável}.
+		
+		\item Um emparelhamento é estável com ao menos uma dessas condições:
+		\begin{enumerate}
+			\item Candidato prefere sua empresa às outras que o aceitariam;
+			\item Empresa prefere seu funcionário aos outros que a aceitariam.
+		\end{enumerate}
+	\end{itemize}
+
+	\captionsetup[table]{skip=2pt}
+	
+	\only<2>{
+		\begin{columns}
+			\captionsetup[table]{skip=0pt}
+			\begin{column}[b]{0.48\textwidth}
+				\begin{table}
+					\centering
+					\scriptsize
+					\begin{tabular}{|c|c|c|c|}
+						\hline
+						\textbf{Candidato} & \textbf{1º} & \textbf{2º} & \textbf{3º} \\ \hline
+						\textbf{Xavier}   &   Boston    &   Atlanta   &   \textbf{\color{magenta}Chicago}   \\
+						\textbf{Yolanda}  &   Atlanta   &   \textbf{\color{magenta}Boston}    &   Chicago   \\
+						\textbf{Zeus}    &   \textbf{\color{magenta}Atlanta}   &   Boston    &   Chicago   \\ \hline
+					\end{tabular}
+					\caption{\scriptsize Um emparelhamento {\color{magenta}não estável}}
+				\end{table}
+			\end{column}
+			\begin{column}[b]{0.48\textwidth}
+				\begin{table}
+					\centering
+					\scriptsize
+					\begin{tabular}{|c|c|c|c|}
+						\hline
+						\textbf{Empresa} & \textbf{1º} & \textbf{2º} & \textbf{3º} \\ \hline
+						\textbf{Atlanta} &   Xavier    &   Yolanda   &    \textbf{\color{magenta}Zeus}     \\
+						\textbf{Boston}  &   \textbf{\color{magenta}Yolanda}   &   Xavier    &    Zeus     \\
+						\textbf{Chicago} &   \textbf{\color{magenta}Xavier}    &   Yolanda   &    Zeus     \\ \hline
+					\end{tabular}
+					\caption{\scriptsize Um emparelhamento {\color{magenta}não estável}}
+				\end{table}
+			\end{column}
+		\end{columns}
+	\vspace{-15pt}
+	\begin{itemize}
+		\item Atlanta prefere Xavier a Zeus e Xavier prefere Atlanta a Chicago.
+	\end{itemize}
+	}
+
+
+	\only<3>{
+		\begin{columns}
+			\captionsetup[table]{skip=0pt}
+			\begin{column}[b]{0.48\textwidth}
+				\begin{table}
+					\centering
+					\scriptsize
+					\begin{tabular}{|c|c|c|c|}
+						\hline
+						\textbf{Candidato} & \textbf{1º} & \textbf{2º} & \textbf{3º} \\ \hline
+						\textbf{Xavier}   &   Boston    &   \textbf{\color{magenta}Atlanta}   &   Chicago   \\
+						\textbf{Yolanda}  &   Atlanta   &   \textbf{\color{magenta}Boston}    &   Chicago   \\
+						\textbf{Zeus}    &   Atlanta   &   Boston    &   \textbf{\color{magenta}Chicago}   \\ \hline
+					\end{tabular}
+					\caption{\scriptsize Um emparelhamento {\color{magenta}estável}}
+				\end{table}
+			\end{column}
+			\begin{column}[b]{0.48\textwidth}
+				\begin{table}
+					\centering
+					\scriptsize
+					\begin{tabular}{|c|c|c|c|}
+						\hline
+						\textbf{Empresa} & \textbf{1º} & \textbf{2º} & \textbf{3º} \\ \hline
+						\textbf{Atlanta} &   \textbf{\color{magenta}Xavier}    &   Yolanda   &    Zeus     \\
+						\textbf{Boston}  &   \textbf{\color{magenta}Yolanda}   &   Xavier    &    Zeus     \\
+						\textbf{Chicago} &   Xavier    &   Yolanda   &    \textbf{\color{magenta}Zeus}     \\ \hline
+					\end{tabular}
+					\caption{\scriptsize Um emparelhamento {\color{magenta}estável}}
+				\end{table}
+			\end{column}
+		\end{columns}
+		\vspace{-15pt}
+		\begin{itemize}
+			\item Nenhum indivíduo consegue ``melhorar'' seu emparelhamento.
+		\end{itemize}
+	}
+
+\end{frame}
+
+
+
+\begin{frame}{Problema do emparelhamento estável}
+	\begin{itemize}
+		\item Problema em outros contextos:
+		\begin{itemize}
+			\item Estudantes de residência em hospitais;
+			\item Formação de equipes;
+			\item Alocação de servidores a aplicações;
+			\item \textbf{\color{magenta}Casamento de pares}.
+		\end{itemize}
+	
+		\medskip
+		\item Problema do \textit{casamento estável}:
+		\begin{itemize}
+			\item Conjunto $M = \{m_1, \dots, m_n\}$ de homens.
+			\item Conjunto $W = \{w_1, \dots, w_n\}$ de mulheres.
+			\item \textbf{Emparelhamento:} conjunto de pares ordenados $(m, w)$, onde $m \in M$ e $w \in W$ e cada indivíduo está em no máximo um par.
+			\item \textbf{Emparelhamento perfeito:} cada indivíduo está em um par.
+			\item Cada homem possui uma lista de preferências de mulheres e vice-versa.
+			\item \textbf{Problema:} encontra um emparelhamento perfeito estável.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Problema do emparelhamento estável}
+\framesubtitle{}
+
+	\begin{itemize}
+		\item \textbf{Instabilidade:} caso que resulta em um emparelhamento não estável.
+		\begin{itemize}
+			\item Dois pares $(m, w)$ e $(m', w')$, em que:
+			\begin{itemize}
+				\item $m$ prefere $w'$ a $w$ e $w'$ prefere $m$ a $m'$; ou
+				\item $w$ prefere $m'$ a $m$ e $m'$ prefere $w$ a $w$.
+			\end{itemize}
+			\item Em ambos os casos, indivíduos têm incentivo de desfazer seu casamento.
+		\end{itemize}
+	
+		\item Um emparelhamento estável é um emparelhamento perfeito que não possui instabilidade.
+
+		\medskip
+	
+		\pause
+	
+		\item \textbf{Exemplo:}
+		\begin{itemize}
+			\item $m$ prefere $w$ a $w'$.
+			\item $m'$ prefere $w'$ a $w$.
+			\item $w$ prefere $m'$ a $m$.
+			\item $w'$ prefere $m$ a $m'$.
+			
+			\item \textbf{Emparelhamento estável 1:} $(m, w)$ e $(m', w')$ -- homens felizes.
+			\item \textbf{Emparelhamento estável 2:} $(m, w')$ e $(m', w)$ -- mulheres felizes.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Algoritmo de Gale-Shapley}
+
+	\begin{algorithm}[H]
+		\DontPrintSemicolon
+		
+		Inicialmente todos $m \in M$ e $w \in W$ estão livres\;
+		
+		\While{existe um homem $m$ livre que ainda não propôs a toda mulher}{
+			Escolha um homem $m$\;
+			$w \gets$ mulher preferida de $m$ para a qual ele ainda não propôs\;
+			\If{$w$ está livre}{
+				$(m, w)$ formam um par\;
+			}\Else{
+				\If{$w$ prefere $m'$ a $m$}{
+					$m$ continua livre\;
+				}\Else{
+					$(m, w)$ formam um par\;
+					$m'$ se torna livre\;
+				}
+			}
+		}
+		
+		Retorna o conjunto $S$ de pares\;
+		
+		\caption{Gale-Shapley}
+	\end{algorithm}
+
+	\pause
+	\begin{tikzpicture}[remember picture,overlay,shift={(current page.center)}]
+		\node [rectangle, align=justify, fill=blue!27!white, rounded corners=0.05cm, opacity = 0.75, text opacity = 1, text=black, text width=6cm] at (2.8, -1.5) {%
+			\footnotesize
+			Iterativamente, um homem livre propõe a uma nova mulher, seguindo sua lista de preferências. Se a mulher está livre ou prefere este homem, eles formam um casal. Caso algum homem seja abandonado pela mulher, ele volta à lista de homens livres. Quando todos os homens estiverem casados, todas as mulheres também estarão.
+		};
+	\end{tikzpicture}
+\end{frame}
+
+
+
+\begin{frame}{Algoritmo de Gale-Shapley}
+\framesubtitle{Detalhes de funcionamento}
+
+	\begin{itemize}
+		\item {\color{magenta}O algoritmo GS retorna um emparelhamento perfeito.}
+		\begin{itemize}
+			\item \textbf{Observação 1:} homens propõem na ordem de sua preferência.
+			\item \textbf{Observação 2:} uma vez em um par, uma mulher nunca fica livre.
+			\item \textbf{Observação 3:} homens propõem somente quando estão livres.
+			\item \textbf{Observação 4:} mulheres mantêm apenas o homem de maior preferência.
+		\end{itemize}
+		
+		\medskip
+		\item \textbf{Prova} (por contradição)\textbf{:}
+		\begin{itemize}
+			\item Supondo que um homem $m \in M$ esteja livre ao final da execução do algoritmo. Então, uma mulher $w \in W$ também estará livre.
+			\item Pela \textit{OBS2}, ninguém propôs a $w$. Mas $m$ propôs a todas as mulheres, para que o algoritmo (laço) tenha terminado [uma contradição].
+			\item Todos os homens terminam em pares. O mesmo ocorre para as mulheres.
+			\item O algoritmo não pode terminar, senão com um emparelhamento perfeito.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Algoritmo de Gale-Shapley}
+\framesubtitle{Detalhes de funcionamento}
+
+	\begin{itemize}
+		\item {\color{magenta}O algoritmo GS retorna um emparelhamento estável.}
+		\begin{itemize}
+			\item Ou seja, o emparelhamento $S$ não possui pares instáveis.
+		\end{itemize}
+	
+		\medskip
+		\item \textbf{Prova:}
+		\begin{itemize}
+			\item Consideremos qualquer par $(m, w)$ que não está em $S$.
+			\medskip
+			\item \textbf{Caso 1:} $m$ nunca propôs a $w$.
+			\begin{itemize}
+				\item $m$ prefere seu par $w'$ a $w$.
+				\item $(m, w)$ não é instável.
+			\end{itemize}
+		
+			\medskip
+			\item \textbf{Caso 2:} $m$ propôs a $w$.
+			\begin{itemize}
+				\item $w$ rejeitou $m$ (no momento ou mais tarde).
+				\item $w$ prefere seu par $m'$ a $m$.
+				\item $(m, w)$ não é instável.
+			\end{itemize}
+		
+			\medskip
+			\item Logo, $S$ é um emparelhamento estável.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Algoritmo de Gale-Shapley}
+\framesubtitle{Complexidade de tempo}
+
+	\begin{itemize}
+		\item {\color{magenta}O algoritmo GS termina em no máximo $n^2$ iterações do laço.}
+		
+		\medskip
+		\item \textbf{Prova:}
+		\begin{itemize}
+			\item A cada iteração, um homem $m$ propõe a uma mulher $w$.
+			\item No pior caso, todas as propostas possíveis serão feitas.
+			\item Ou seja, todos os possíveis pares $(m, w)$ serão ``testados''.
+			\item Existe no máximo $n^2$ pares possíveis.
+			\item Logo, o laço é executado no máximo $n^2$ vezes.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Algoritmo de Gale-Shapley}
+\framesubtitle{Complexidade de tempo}
+
+\begin{itemize}
+	\item {\color{magenta}O algoritmo GS possui complexidade quadrática -- $O(n^2)$.}
+	
+	\medskip
+	\item \textbf{Prova:}
+	\begin{itemize}
+		\item Sabemos que o laço executa $n^2$ vezes no pior caso.
+		\item Para que a complexidade seja $O(n^2)$, todas as operações internas ao laço devem ser executadas em tempo constante.
+		\begin{itemize}
+			\item Identificar um homem livre.
+			\item Identificar a mulher preferida para quem um homem $m$ ainda não propôs.
+			\item Verificar se uma mulher $w$ possui um par e recuperá-lo.
+			\item Verificar qual dos homens $m$ e $m'$ é preferido por uma mulher $w$.
+		\end{itemize}
+		\item Usando listas e vetores é possível obter o desempenho desejado.
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Algoritmo de Gale-Shapley}
+\framesubtitle{Complexidade de tempo -- detalhes de implementação}
+
+\begin{itemize}
+	\item Cada homem e cada mulher recebe um índice $i$.
+	\item As preferências são dadas por matrizes (\texttt{ManPref} e \texttt{WomanPref}).
+	\begin{itemize}
+		\item \texttt{ManPref[m,\,i]} denota a $i$-ésima mulher na lista de preferência de $m$.
+		\item \texttt{WomanPref[w,\,i]} denota o $i$-ésimo homem na lista de preferência de $w$.
+	\end{itemize}
+
+	\smallskip
+	\pause
+	\item O conjunto de homens livres é mantido por uma lista encadeada.
+	\begin{itemize}
+		\item Inserção e remoção são feitas em tempo constante.
+	\end{itemize}
+	
+	\smallskip
+	\pause
+	\item Um vetor \texttt{Next} armazena a próxima mulher para um homem propor.
+	\begin{itemize}
+		\item O vetor é inicializado \texttt{Next[m] = 1}, para todo homem $m$.
+		\item Um homem vai propor à mulher \texttt{w = ManPref[m,\,Next[m]]}.
+		\item Após propor, \texttt{Next[m]} é incrementado em $1$.
+	\end{itemize}
+	
+	\smallskip
+	\pause
+	\item Um vetor \texttt{Current} armazena o atual par de uma mulher.
+	\begin{itemize}
+		\item \texttt{Current[w]} é o atual par da mulher $w$.
+	\end{itemize}
+	
+	\smallskip
+	\pause
+	\item Uma matriz \texttt{Ranking} mapeia a lista de preferências de uma mulher.
+	\begin{itemize}
+		\item \texttt{Ranking[w,\,m]} contém a posição de $m$ nas preferências de $w$.
+		\item Verificar se $w$ prefere $m$ a $m'$: \texttt{Ranking[w,\,m] < Ranking[w,\,m$'$]}?
+	\end{itemize}
+\end{itemize}
+
+
+\pause
+\begin{tikzpicture}[remember picture,overlay,shift={(current page.center)}]
+	\node [rectangle, fill=white, opacity = 1, minimum width=12cm, minimum height=1.9cm] at (0, 2.1) {};
+	
+	\draw[red,opacity=1,very thick](-5.7,1.2) rectangle (5.9,0.27);
+	\draw[blue,opacity=1,very thick](-5.7,0.2) rectangle (5.9,-1.55);
+	\draw[green,opacity=1,very thick](-5.7,-1.615) rectangle (5.9,-2.48);
+	\draw[orange,opacity=1,very thick](-5.7,-2.55) rectangle (5.9,-3.9);
+	
+	\node [rectangle, align=center, opacity = 1, text width=11cm, text=black] at (0, 2.45) {Usando essas estruturas de dados todas as operações são realizadas em tempo constante e o algoritmo possui complexidade $O(n^2)$};
+	
+	\node [rectangle, align=center, fill=red, rounded corners=0.05cm, opacity = 0.75, text opacity = 1, text=white] at (-3, 1.7) {\footnotesize Operação 1};
+	
+	\node [rectangle, align=center, fill=blue, rounded corners=0.05cm, opacity = 0.75, text opacity = 1, text=white] at (-1, 1.7) {\footnotesize Operação 2};
+	
+	\node [rectangle, align=center, fill=green, rounded corners=0.05cm, opacity = 0.75, text opacity = 1, text=white] at (1, 1.7) {\footnotesize Operação 3};
+	
+	\node [rectangle, align=center, fill=orange, rounded corners=0.05cm, opacity = 0.75, text opacity = 1, text=white] at (3, 1.7) {\footnotesize Operação 4};
+\end{tikzpicture}
+
+\end{frame}
+
+
+
+\begin{frame}{Algoritmo de Gale-Shapley}
+\framesubtitle{Otimalidade do emparelhamento}
+
+\begin{itemize}
+	\item \textbf{Cenário:}
+	\begin{itemize}
+		\item $m$ prefere $w$ a $w'$.
+		\item $m'$ prefere $w'$ a $w$.
+		\item $w$ prefere $m'$ a $m$.
+		\item $w'$ prefere $m$ a $m'$.
+	\end{itemize}
+	
+	\pause
+	\item \textbf{Emparelhamentos estáveis:}
+	\begin{itemize}
+		\item $(m, w)$ e $(m', w')$.
+		\item $(m, w')$ e $(m', w)$.
+	\end{itemize}
+
+	\pause
+	\item \textbf{Qual emparelhamento o algoritmo GS retorna?}
+	\begin{itemize}
+		\item $(m, w)$ e $(m', w')$.
+		\item Com homens propondo, o emparelhamento obtido é o melhor para eles.
+		\item Cada homem termina com o melhor par possível.
+		\item Ao inverter, o emparelhamento é o melhor para as mulheres.
+	\end{itemize}
+
+	\pause
+	\item {\color{magenta}Toda execução do algoritmo GS retorna o mesmo emparelhamento, que é o emparelhamento ótimo para o conjunto de indivíduos que propõem.}
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}{Exercício}
+\framesubtitle{Algoritmo de Gale-Shapley}
+	\begin{enumerate}
+		\item Implemente o algoritmo de Gale-Shapley para resolver o problema do emparelhamento estável. Implemente usando as estruturas de dados sugeridas, a fim de garantir o melhor desempenho. Teste a sua implementação em um conjunto de instâncias criadas aleatoriamente, iniciando por cada um dos conjuntos do problema.
+	\end{enumerate}
+\end{frame}
+
+%\begin{frame}{Atividades}
+%	
+%\end{frame}
+
+\frame{
+	\frametitle{Referências}	
+	\setlength{\bibsep}{8pt plus 0.3ex}
+	\fontsize{10pt}{10}\selectfont
+	\bibliographystyle{apalike}
+	\bibliography{../referencias}
+}
+
+\end{document}

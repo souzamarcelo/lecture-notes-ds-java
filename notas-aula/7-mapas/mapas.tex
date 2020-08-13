@@ -1,0 +1,417 @@
+\newcommand{\templatesdir}{../../../templates}
+\newcommand{\template}{template-roteiro-est}
+\input{\templatesdir/\template/template}
+
+\newcommand{\content}{Mapas}
+\newcommand{\class}{Algoritmos e Estruturas de Dados}
+\newcommand{\shortcourse}{45EST}
+
+\begin{document}
+
+\makeheader
+
+{
+Leitura obrigatória:
+\begin{itemize}
+	\item Capítulo 10 de~\cite{GoodrichEtAl2014} -- Mapas, tabelas hash e skip lists.
+\end{itemize}
+
+Leitura complementar:
+\begin{itemize}
+	\item Capítulo 3 (3.1) de~\cite{SedgewickAndWayne2011} -- Tabelas de símbolos.
+	\item Capítulo 8 de~\cite{Preiss2001} -- Dispersão, tabelas de dispersão e tabelas de espalhamento.
+\end{itemize}
+}
+
+\medskip
+
+\newtitle{Mapas}
+
+Ideia geral:
+\begin{itemize}
+	\item Armazena entradas chave/valor, onde as chaves são únicas.
+	\item Também chamados de \textbf{dicionários}.
+	\item Chave funciona como índice da estrutura.
+	\item Aplicações:
+	\begin{itemize}
+		\item Armazenar alunos pela sua matrícula.
+		\item Armazenar automóveis pela sua placa.
+	\end{itemize}
+	\item Operações: \texttt{get(k)}, \texttt{put(k,\,v)}, \texttt{remove(k)}.
+	\item Funcionamento (e implementação) baseado em tabela.
+\end{itemize}
+
+\clearpage
+
+Exemplo (mapa/dicionário para o índice de um livro):
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ll}
+		\hline
+		\textbf{Chave (termo)} & \textbf{Valor (páginas)} \\
+		\hline
+		herança & 12, 23, 78, 81 \\
+		polimorfismo & 66, 80, 93 \\
+		encapsulamento & 10, 24, 26, 33 \\
+		associação & 41, 43, 54 \\
+		agregação & 48, 60, 62 \\
+		composição & 48, 61, 62 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+Interface \texttt{Map}:
+\begin{minted}{java}
+public interface Map<K, V> {
+	int size();
+	boolean isEmpty();
+	V get(K key);
+	V put(K key, V value);
+	V remove(K k);
+}
+\end{minted}
+
+\medskip
+
+Implementação não ordenada -- \texttt{UnsortedTableMap}:
+\begin{minted}{java}
+public class UnsortedTableMap<K,V> implements Map<K,V> {
+	
+	protected static class MapEntry<K,V> implements Entry<K,V> {
+		private K k;
+		private V v;
+		
+		public MapEntry(K key, V value) {
+			k = key;
+			v = value;
+		}
+		
+		public K getKey() { return k; }
+		public V getValue() { return v; }
+		
+		protected void setKey(K key) { k = key; }
+		protected V setValue(V value) {
+			V old = v;
+			v = value;
+			return old;
+		}
+		
+		public String toString() { return "<" + k + ", " + v + ">"; }
+	}
+	
+	private ArrayList<MapEntry<K,V>> table = new ArrayList<>();
+	
+	public int size() { return table.size(); }
+	public boolean isEmpty() { return size() == 0; }
+	
+	private int findIndex(K key) {
+		int n = table.size();
+		for (int j=0; j < n; j++)
+		if (table.get(j).getKey().equals(key))
+			return j;
+		return -1;
+	}
+	
+	public V get(K key) {
+		int j = findIndex(key);
+		if (j == -1) return null;
+		return table.get(j).getValue();
+	}
+	
+	public V put(K key, V value) {
+		int j = findIndex(key);
+		if (j == -1) {
+			table.add(new MapEntry<>(key, value));
+			return null;
+		} else
+			return table.get(j).setValue(value);
+	}
+	
+	public V remove(K key) {
+		int j = findIndex(key);
+		int n = size();
+		if (j == -1) return null;
+		V answer = table.get(j).getValue();
+		if (j != n - 1)
+			table.set(j, table.get(n-1));
+		table.remove(n-1);
+		return answer;
+	}
+}
+\end{minted}
+
+\medskip
+
+{\color{redtext}
+Comentários:
+\begin{itemize}
+	\item O mapa implementa sua estrutura interna para a entrada e utiliza o \texttt{ArrayList} para armazenar a lista de entradas.
+	\item O método \texttt{findIndex} devolve o índice da entrada com a respectiva chave, ou $-1$, caso não exista entrada com a chave buscada.
+	\item O método \texttt{put} substitui o valor da chave, caso ela exista, ou insere uma nova entrada, caso contrário.
+	\item O método \texttt{remove} substitui o elemento a ser removido pela última entrada, e então remove o último elemento. Isso faz com que não seja necessária realocação dos elementos no vetor.
+\end{itemize}
+}
+
+\medskip
+
+Análise de complexidade:
+\begin{itemize}
+	\item Todas as operações tem complexidade linear $O(n)$, dada a necessidade de buscar a entrada.
+\end{itemize}
+
+\clearpage
+
+\textbf{Mapa ordenado}
+\begin{itemize}
+	\item Permite aplicar uma busca de entrada mais eficiente -- \textbf{busca binária}.
+	\item Permite implementar outras operações de maneira eficiente:
+	\begin{itemize}
+		\item \texttt{firstEntry()}: retorna a entrada com menor chave.
+		\item \texttt{lastEntry()}: retorna a entrada com maior chave.
+		\item \texttt{ceilingEntry(k)}: retorna a entrada com a menor chave $\ge k$.
+		\item \texttt{floorEntry(k)}: retorna a entrada com a maior chave $\le k$.
+		\item \texttt{higherEntry(k)}: retorna a entrada com a menor chave $> k$.
+		\item \texttt{lowerEntry(k)}: retorna a entrada com a maior chave $< k$.
+	\end{itemize}
+\end{itemize}
+
+\bigskip
+
+Interface \texttt{SortedMap}:
+\begin{minted}{java}
+public interface SortedMap<K,V> extends Map<K,V> {
+	Entry<K,V> firstEntry();
+	Entry<K,V> lastEntry();
+	Entry<K,V> ceilingEntry(K key);
+	Entry<K,V> floorEntry(K key);
+	Entry<K,V> lowerEntry(K key);
+	Entry<K,V> higherEntry(K key);
+}
+\end{minted}
+
+\medskip
+
+Implementação da \texttt{SortedTableMap}:
+\begin{minted}{java}
+public class SortedTableMap<K,V> implements SortedMap<K,V> {
+	
+	protected static class MapEntry<K,V> implements Entry<K,V> {
+		private K k;
+		private V v;
+		
+		public MapEntry(K key, V value) {
+			k = key;
+			v = value;
+		}
+		
+		public K getKey() { return k; }
+		public V getValue() { return v; }
+		
+		protected void setKey(K key) { k = key; }
+		protected V setValue(V value) {
+			V old = v;
+			v = value;
+			return old;
+		}
+		
+		public String toString() { return "<" + k + ", " + v + ">"; }
+	}
+	
+	
+	private Comparator<K> comp;
+	private ArrayList<MapEntry<K,V>> table = new ArrayList<>();
+	
+	protected SortedTableMap(Comparator<K> c) {
+		comp = c;
+	}
+	
+	protected SortedTableMap() {
+		this(new DefaultComparator<K>());
+	}
+	
+	public int size() { return table.size(); }
+	public boolean isEmpty() { return size() == 0; }
+	
+	protected boolean checkKey(K key) {
+		try {
+			return (comp.compare(key,key)==0);
+		} catch (ClassCastException e) {
+			throw new IllegalArgumentException("Incompatible key");
+		}
+	}
+	
+	private int findIndex(K key) { return findIndex(key, 0, table.size() - 1); }
+	
+	private int findIndex(K key, int low, int high) {
+		if (high < low) return high + 1;
+		int mid = (low + high) / 2;
+		int result = comp.compare(key, table.get(mid).getKey());
+		if (result == 0)
+			return mid;
+		else if (result < 0)
+			return findIndex(key, low, mid - 1);
+		else
+			return findIndex(key, mid + 1, high);
+	}
+	
+	public V get(K key) {
+		checkKey(key);
+		int j = findIndex(key);
+		if (j==size() || comp.compare(key, table.get(j).getKey())!=0)
+			return null;
+		return table.get(j).getValue();
+	}
+	
+	public V put(K key, V value) {
+		checkKey(key);
+		int j = findIndex(key);
+		if (j<size() && comp.compare(key, table.get(j).getKey())==0)
+			return table.get(j).setValue(value);
+		table.add(j, new MapEntry<K,V>(key,value));
+		return null;
+	}
+	
+	public V remove(K key) {
+		checkKey(key);
+		int j = findIndex(key);
+		if (j==size() || comp.compare(key, table.get(j).getKey())!=0)
+			return null;
+		return table.remove(j).getValue();
+	}
+	
+	private Entry<K,V> safeEntry(int j) {
+		if (j < 0 || j >= table.size()) return null;
+		return table.get(j);
+	}
+	
+	public Entry<K,V> firstEntry() {
+		return safeEntry(0);
+	}
+	
+	public Entry<K,V> lastEntry() {
+		return safeEntry(table.size()-1);
+	}
+	
+	public Entry<K,V> ceilingEntry(K key) {
+		return safeEntry(findIndex(key));
+	}
+	
+	public Entry<K,V> floorEntry(K key) {
+		int j = findIndex(key);
+		if (j == size() || ! key.equals(table.get(j).getKey()))
+			j--;
+		return safeEntry(j);
+	}
+	
+	public Entry<K,V> lowerEntry(K key) {
+		return safeEntry(findIndex(key) - 1);
+	}
+	
+	public Entry<K,V> higherEntry(K key) {
+		int j = findIndex(key);
+		if (j < size() && key.equals(table.get(j).getKey()))
+			j++;
+		return safeEntry(j);
+	}
+}
+\end{minted}
+
+\clearpage
+
+{\color{redtext}
+Comentários:
+\begin{itemize}
+	\item A classe exige um comparador ou um tipo comparável.
+	\item O método \texttt{findIndex} implementa uma \textbf{busca binária}.
+	\begin{itemize}
+		\item Encontra entrada em $O(\log n)$, caso exista.
+		\item Caso contrário, retorna posição onde entrada deve ser armazenada.
+		\begin{itemize}
+			\item Observe que a chamada recursiva ocorre com \texttt{mid $\pm$ 1}.
+		\end{itemize}
+	\end{itemize}
+
+	\item Método \texttt{safeEntry} verifica se o acesso ao vetor é válido.
+	\item O \texttt{ceiling} é obtido pela busca binária.
+	\item O \texttt{floor} é obtido pela busca binária, caso existente, ou a posição anterior, caso contrário.
+	\item O \texttt{lower} é obtido pela posição anterior ao retorno da busca binária.
+	\item O \texttt{higher} é obtido pela busca binária, caso não existente, ou a posição posterior, caso contrário.
+	\item Importante: a chave precisa implementar o método \texttt{equals}.
+\end{itemize}
+}
+
+\medskip
+
+Análise de complexidade:
+\begin{itemize}
+	\item Método \texttt{get} executa em $O(\log n)$.
+	\item Método \texttt{put} executa em $O(\log n)$ na substituição e $O(n)$ na inserção de um novo elemento.
+	\item Método \texttt{remove} executa em $O(n)$.
+	\item Os métodos \texttt{firstEntry} e \texttt{lastEntry} executam em $O(1)$.
+	\item Os demais métodos executam em $O(\log n)$.
+\end{itemize}
+
+\clearpage
+
+\newtitle{Atividades}
+
+\begin{enumerate}
+	\item Leia a respeito das estratégias de \textit{hashing} e da estrutura de dados chamada \textit{tabela hash}. Essa estrutura armazena mapas e fornece operações em tempo constante. Como isso é possível? Veja as formas de implementação detalhadas em~\cite{GoodrichEtAl2014}.
+	
+	\item Desenvolva um sistema para gerenciamento de restaurantes para um sistema de recomendação. O usuário escolherá uma categoria (japonês, massas, churrasco ou lanches) e informará o valor que deseja pagar pela refeição. O sistema então recomendará o melhor restaurante para as opções do cliente. Para isso, restaurantes de diferentes categorias devem ser armazenados em mapas distintos, cuja chave consiste na tupla \texttt{<nota, preço médio>}, enquanto o valor armazena as demais informações do restaurante, como nome, horário de funcionamento e endereço. Crie rotinas para a criação de novos restaurantes, remoção de restaurantes da base de dados e consulta. Implemente o sistema utilizando mapas ordenados e não-ordenados. Compare o desempenho das operações.
+	
+	\item Faça os seguintes exercícios de~\cite{GoodrichEtAl2014}:
+	
+	\begin{itemize}
+		\item[R-10.1:] Qual é o tempo de execução no pior caso para inserir $n$ pares chave-valor em um mapa inicialmente vazio, implementado pela classe \texttt{UnsortedTableMap}?
+		
+		\item[R-10.2:] Reimplemente a classe \texttt{UnsortedTableMap} usando uma lista posicional (\texttt{PositionalList}) ao invés de um \texttt{ArrayList}.
+		
+		\item[R-10.3:] O uso de valores \texttt{null} em um mapa é problemático, uma vez que não é possível diferenciar se um retorno \texttt{null} do método \texttt{get(k)} representa um valor legítimo de uma entrada \texttt{(k, null)}, ou representa que a chave \texttt{k} não foi encontrada. A interface \texttt{java.util.Map} inclui um método booleano \texttt{containsKey(k)} que resolve essa ambiguidade. Implemente este método na classe \texttt{UnsortedTableMap}.
+		
+		\item[R-10.18:] Qual é o tempo de execução assintótico do pior caso para realizar $n$ remoções de uma instância de \texttt{SortedTableMap} que contém inicialmente $2n$ entradas?
+		
+		\item[R-10.19:] Implemente o método \texttt{containKey(k)} para a classe \texttt{SortedTableMap}.
+		
+		\item[R-10.20:] Descreva como uma lista ordenada implementada como uma lista duplamente encadeada poderia ser usada para implementar um mapa ordenado.
+		
+		\item[R-10.21:] Considere a variante abaixo do método \texttt{findIndex} para a classe \texttt{SortedTableMap}.
+		
+\begin{minted}{java}
+private int findIndex(K key, int low, int high) {
+	if(high < low) return high + 1;
+	int mid = (low + high) / 2;
+	if(compare(key, table.get(mid).getKey()) < 0)
+		return findIndex(key, low, mid - 1);
+	else
+		return findIndex(key, mid + 1, high);
+}
+\end{minted}
+		
+		Este método sempre produz o mesmo resultado que a versão original? Justifique sua resposta.
+		
+		\item[C-10.33:] Considere o objetivo de adicionar uma entrada \texttt{(k, v)} em um mapa somente se não existir outra entrada com a mesma chave \texttt{k}. Para um mapa $M$ sem valores \texttt{null}, isso pode ser feito da seguinte forma:
+		
+\begin{minted}{java}
+if(M.get(k) == null)
+	M.put(k, v);
+\end{minted}
+		
+		Apesar de atingir o objetivo, esta estratégia é ineficiente, uma vez que gasta tempo para verificar que não existe entrada com a chave \texttt{k}, e novamente para buscar a posição de inserção da nova entrada. Para evitar isso, algumas implementações de mapas suportam um método \texttt{pullAbsent(k, v)}, que realiza a inserção assim que identifica a não existência de entrada com a chave \texttt{k}. Forneça a implementação deste método para a classe \texttt{UnsortedTableMap}.
+		
+		\item[C-10.45:] Desenvolva uma versão de \texttt{UnsortedTableMap} baseada em (com conhecimento de) localização, de tal forma que a operação \texttt{remove(e)} para uma entrada \texttt{e} existente possa ser implementada em tempo $O(1)$.
+	\end{itemize}
+\end{enumerate}
+
+\bigskip
+
+\newtitle{Referências}
+\begingroup
+	\footnotesize
+	\renewcommand{\chapter}[2]{}%
+	\bibliographystyle{apalike}
+	\bibliography{../referencias}
+\endgroup
+
+\end{document}
