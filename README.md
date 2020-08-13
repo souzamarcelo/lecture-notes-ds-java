@@ -4,7 +4,7 @@
 
 Essas são as notas de aula usadas na disciplina de *Algoritmos e Estruturas de Dados* do curso de [Bacharelado em Engenharia de Software](https://www.udesc.br/ceavi/engenhariadesoftware) da [Universidade do Estado de Santa Catarina](https://www.udesc.br/ceavi). Esta obra está disponível sob uma Licença <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Atribuição-NãoComercial-SemDerivações 4.0 Internacional</a>.
 
-A obra de **Goodrich, Tamassia e Goldwasser (2014). *Data structures and Algorithms in Java*. John Wiley & Sons, 6ª edição.** é o principal livro de referência para a elaboração deste material,especialmente nos conteúdos iniciais e nas estruturas de dados lineares. Tanto as notas quanto os códigos fornecidos se baseiam diretamente no trabalho desses autores. Demais obras usadas na elaboração destas notas de aula estão listadas a seguir.
+A obra de **Goodrich, Tamassia e Goldwasser (2014). *Data structures and Algorithms in Java*. John Wiley & Sons, 6ª edição**, é o principal livro de referência para a elaboração deste material, especialmente nos conteúdos iniciais e nas estruturas de dados lineares. Tanto as notas quanto os códigos fornecidos se baseiam diretamente no trabalho desses autores. Demais obras usadas na elaboração destas notas de aula estão listadas a seguir.
 
 + Deitel e Deitel (2010). *Java: Como Programar*. São Paulo: Prentice Hall, 6ª edição.
 + Edelweiss e Galante (2009). *Estruturas de Dados*. Volume 18. Editora Bookman.
