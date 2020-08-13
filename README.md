@@ -13,7 +13,7 @@ A obra de **Goodrich, Tamassia e Goldwasser (2014). *Data structures and Algorit
 + Kleinberg e Tardos (2006). *Algorithm Design*. Pearson Education India.
 + Lafore e Machado (2004). *Estruturas de dados & Algoritmos em Java*. Editora Ciência Moderna.
 + Pereira (2008). *Estruturas de Dados Fundamentais: Conceitos e Aplicações*. Editora Érica.
-+ Preiss (2001). *Estruturas de Dados e Algoritmos: Padrões de Projetos Orientados a Objetos com Java. Editora Campus.
++ Preiss (2001). *Estruturas de Dados e Algoritmos: Padrões de Projetos Orientados a Objetos com Java*. Editora Campus.
 + Sedgewick e Wayne (2011). *Algorithms*. Addison-Wesley Professional.
 + Szwarcfiter e Markenzon (2009). *Estruturas de Dados e seus Algoritmos. Volume 2. Livros Técnicos e Científicos.
 + Ziviani (2010). *Projeto de Algoritmos com Implementações em Java e C++*. Cengage Learning.
