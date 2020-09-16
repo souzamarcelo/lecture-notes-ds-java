@@ -1,0 +1,192 @@
+\documentclass[usenames,dvipsnames]{beamer}
+
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{ragged2e}
+\usepackage{etoolbox}
+\usepackage{multirow}
+\usepackage{natbib}
+\usepackage{subfigure}
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{adjustbox}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{dot2texi}
+\usepackage{minted}
+\usepackage{mdframed}
+\usepackage{ragged2e}
+\usepackage[ruled,vlined]{algorithm2e}
+
+\usefonttheme[onlymath]{serif}
+
+\renewcommand{\thealgocf}{}
+
+\usetheme{Boadilla}
+\usecolortheme{seahorse}
+
+\author[Prof. Marcelo de Souza]{}
+\date[Udesc Ibirama]{}
+
+\renewcommand{\maketitle}{
+	\frame[plain]{
+		\titlepage
+		\centering
+		
+		{\scriptsize
+			\begin{tikzpicture}[remember picture,overlay,shift={(current page.center)}]
+			\node at (-5.7,-4.13) {\includegraphics[width=.2\textwidth,trim={0 19cm 0 0},clip]{\defs/img/logo-udesc.pdf}};
+			\node[align=center]  at (0,-0.4) {%
+				\small\textbf{Prof. Marcelo de Souza}\\[3pt]
+				\small\texttt{marcelo.desouza@udesc.br}
+			};
+			\end{tikzpicture}
+		}
+		
+		{\scriptsize
+			\begin{tikzpicture}[remember picture,overlay,shift={(current page.center)}]
+			\node at (-5.7,-4.13) {\includegraphics[width=.2\textwidth,trim={0 19cm 0 0},clip]{\defs/img/logo-udesc.pdf}};
+			\node[align=left] at (-2.4,-4.11) {%
+				\color{black!80}Algoritmos e Estruturas de Dados\\
+				\color{black!80}Bacharelado em Engenharia de Software\\
+				\color{black!80}Universidade do Estado de Santa Catarina%
+			};
+			\end{tikzpicture}
+		}
+	}
+}
+
+\addtobeamertemplate{frametitle}{}{%
+	\begin{tikzpicture}[remember picture,overlay]
+		\node[anchor=north east,xshift=12pt,yshift=2pt] at (current page.north east){
+			\includegraphics[height=1cm,trim={0 19cm 0 0},clip]{\defs/img/logo-udesc.pdf}
+		};
+	\end{tikzpicture}
+}
+
+\addtobeamertemplate{frametitle}{}{\vspace*{-0.5cm}}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\colorlet{codeboxcolor}{blue!8}
+
+\surroundwithmdframed{minted}
+
+\BeforeBeginEnvironment{mdframed}{}
+\AfterEndEnvironment{mdframed}{}
+
+\mdfsetup{%
+	backgroundcolor=codeboxcolor,
+	linecolor=white}
+
+\setminted{%
+	mathescape,
+	escapeinside=@@,
+	linenos,
+	breaklines,
+	tabsize=3,
+	fontsize=\footnotesize}
+
+\def\arraystretch{1.5}
+
+\captionsetup[figure]{labelformat=empty}
+\captionsetup[table]{labelformat=empty}
+
+%\setbeamercovered{transparent}
+\setbeamercovered{invisible}
+
+\definecolor{black}{RGB}{0, 0, 0}
+\definecolor{darkred}{RGB}{179, 0, 0}
+\definecolor{darkblue}{RGB}{0, 0, 51}
+
+\setbeamertemplate{itemize item}{\footnotesize\raise1.25pt\hbox{\color{darkred}$\bullet$}}
+\setbeamertemplate{itemize subitem}{\scriptsize\raise1pt\hbox{\color{darkred}$\circ$}}
+\setbeamertemplate{itemize subsubitem}{\scriptsize\raise1.5pt\hbox{\color{darkred}$\triangleright$}}
+\setbeamertemplate{enumerate item}{\color{darkred}\insertenumlabel.}
+\setbeamertemplate{enumerate subitem}{\color{darkred}\insertenumlabel.\insertsubenumlabel}
+\setbeamertemplate{enumerate subsubitem}{\color{darkred}\insertenumlabel.\insertsubenumlabel.\insertsubsubenumlabel}
+
+\AtBeginEnvironment{block}{
+	\setbeamertemplate{itemize item}{\footnotesize\raise1.25pt\hbox{\color{black}$\bullet$}}
+	\setbeamertemplate{itemize subitem}{\scriptsize\raise1pt\hbox{\color{black}$\circ$}}
+	\setbeamertemplate{itemize subsubitem}{\scriptsize\raise1.5pt\hbox{\color{black}$\triangleright$}}
+	\setbeamertemplate{enumerate item}{\color{black}\insertenumlabel.}
+	\setbeamertemplate{enumerate subitem}{\color{black}\insertenumlabel.\insertsubenumlabel}
+	\setbeamertemplate{enumerate subsubitem}{\color{black}\insertenumlabel.\insertsubenumlabel.\insertsubsubenumlabel}
+}
+\AtBeginEnvironment{exampleblock}{
+	\setbeamertemplate{itemize item}{\footnotesize\raise1.25pt\hbox{\color{black}$\bullet$}}
+	\setbeamertemplate{itemize subitem}{\scriptsize\raise1pt\hbox{\color{black}$\circ$}}
+	\setbeamertemplate{itemize subsubitem}{\scriptsize\raise1.5pt\hbox{\color{black}$\triangleright$}}
+	\setbeamertemplate{enumerate item}{\color{black}\insertenumlabel.}
+	\setbeamertemplate{enumerate subitem}{\color{black}\insertenumlabel.\insertsubenumlabel}
+	\setbeamertemplate{enumerate subsubitem}{\color{black}\insertenumlabel.\insertsubenumlabel.\insertsubsubenumlabel}
+}
+
+\AtBeginEnvironment{alertblock}{
+	\setbeamertemplate{itemize item}{\footnotesize\raise1.25pt\hbox{\color{black}$\bullet$}}
+	\setbeamertemplate{itemize subitem}{\scriptsize\raise1pt\hbox{\color{black}$\circ$}}
+	\setbeamertemplate{itemize subsubitem}{\scriptsize\raise1.5pt\hbox{\color{black}$\triangleright$}}
+	\setbeamertemplate{enumerate item}{\color{black}\insertenumlabel.}
+	\setbeamertemplate{enumerate subitem}{\color{black}\insertenumlabel.\insertsubenumlabel}
+	\setbeamertemplate{enumerate subsubitem}{\color{black}\insertenumlabel.\insertsubenumlabel.\insertsubsubenumlabel}
+}
+
+\let\oldenum\enumerate
+\renewcommand\enumerate{\oldenum\justifying}
+
+\let\olditem\itemize
+\renewcommand\itemize{\olditem\justifying}
+
+\setbeamertemplate{section in toc}{\color{darkred}\inserttocsectionnumber.~\color{black}\inserttocsection}
+
+\setbeamertemplate{title page}[default][colsep=-4bp,rounded=true]
+
+\setbeamercolor{frametitle}{bg=white}
+\setbeamercolor{title}{bg=white}
+
+\setbeamercolor{palette primary}{fg=darkred}
+\setbeamercolor{palette secondary}{fg=darkblue}
+\setbeamercolor{palette tertiary}{fg=darkblue}
+\setbeamercolor{palette quaternary}{fg=darkblue}
+\setbeamercolor{normal text}{fg=darkblue}
+
+\setbeamerfont{frametitle}{size=\LARGE}
+\setbeamerfont{title}{size=\LARGE}
+
+
+\setbeamertemplate{footline}
+{
+	\leavevmode%
+	\hbox{%
+		\begin{beamercolorbox}[wd=.9\paperwidth,ht=2.25ex,dp=1ex,center]{}%
+			\color{black!80} \hypersetup{hidelinks}%
+			\insertshortauthor%
+			\hspace*{4ex}%
+			$\diamond$%
+			\hspace*{4ex}%
+			\insertshorttitle%
+			\hspace*{4ex}%
+			$\diamond$%
+			\hspace*{4ex}%
+			\insertshortdate%
+		\end{beamercolorbox}%
+		\begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,right]{}%
+			\color{black!80}
+			\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+	\end{beamercolorbox}}%
+	\vskip0pt%
+}
+
+\setbeamertemplate{navigation symbols}{}
+
+\hypersetup{
+	colorlinks,
+	linkcolor={black},
+	citecolor={blue!80!black},
+	urlcolor={blue!80!black}
+}
+
+\usetikzlibrary{shapes,arrows,arrows.meta,chains,decorations.pathreplacing,automata,positioning}
