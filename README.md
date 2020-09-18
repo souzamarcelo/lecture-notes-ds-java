@@ -49,7 +49,7 @@ Aqui estão instruções de citação, caso você utilize esse material de algum
 
 Marcelo de Souza (2020), Notas de Aula: Algoritmos e Estruturas de Dados. Online: https://github.com/souzamarcelo/lecture-notes-ds-java. Creative Commons BY-NC-ND 4.0.
 
-```
+```bibtex
 @Misc{Souza2018lnds,
     title =        {Notas de Aula: Algoritmos e Estruturas de Dados},
     author =       {Marcelo de Souza}, 
