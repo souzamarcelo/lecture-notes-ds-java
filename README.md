@@ -22,22 +22,22 @@ Os materiais referentes a cada tópico se encontram no diretório [notas-aula](.
 
 |#|Conteúdo|Formato|
 |-|--------|-------|
-|1|[Introdução](./notas-aula/1-introducao/introducao.pdf)|notas|
-|2|[Complexidade de algoritmos](./notas-aula/2-complexidade-algoritmos/complexidade-algoritmos.pdf)|notas|
-|3|[Estruturas de dados fundamentais](./notas-aula/3-estruturas-dados-fundamentais/estruturas-dados-fundamentais.pdf)|notas|
-|4|[Pilhas, filas e deques](./notas-aula/4-pilhas-filas-deques/pilhas-filas-deques.pdf)|notas|
-|5|[Listas dinâmicas](./notas-aula/5-listas-dinamicas/listas-dinamicas.pdf)|notas|
-|6|[Filas de prioridade](./notas-aula/6-filas-prioridade/filas-prioridade.pdf)|notas|
-|7|[Mapas](./notas-aula/7-mapas/mapas.pdf)|notas|
-|8|[Outras estruturas de dados lineares](./notas-aula/8-outras-estruturas-dados-lineares/outras-estruturas-dados-lineares.pdf)|notas|
-|9|[Algoritmos de busca](./notas-aula/9-algoritmos-busca/algoritmos-busca.pdf)|notas|
-|10|[Algoritmos de ordenação](./notas-aula/10-algoritmos-ordenacao/algoritmos-ordenacao.pdf)|notas|
-|11|[Árvores](./notas-aula/11-arvores/arvores.pdf)|slides|
-|12|[Heaps](./notas-aula/12-heaps/heaps.pdf)|slides|
-|13|[Emparelhamento estável](./notas-aula/13-emparelhamento-estavel/emparelhamento-estavel.pdf)|slides|
-|14|[Grafos](./notas-aula/14-grafos/grafos.pdf)|slides|
-|15|[Busca de caminhos em grafos](./notas-aula/15-busca-caminhos/busca-caminhos.pdf)|slides|
-|16|[Árvore geradora mínima](./notas-aula/16-arvore-geradora-minima/arvore-geradora-minima.pdf)|slides|
+|1|[Introdução](./notas-aula/1-introducao.pdf)|notas|
+|2|[Complexidade de algoritmos](./notas-aula/2-complexidade-algoritmos.pdf)|notas|
+|3|[Estruturas de dados fundamentais](./notas-aula/3-estruturas-dados-fundamentais.pdf)|notas|
+|4|[Pilhas, filas e deques](./notas-aula/4-pilhas-filas-deques.pdf)|notas|
+|5|[Listas dinâmicas](./notas-aula/5-listas-dinamicas.pdf)|notas|
+|6|[Filas de prioridade](./notas-aula/6-filas-prioridade.pdf)|notas|
+|7|[Mapas](./notas-aula/7-mapas.pdf)|notas|
+|8|[Outras estruturas de dados lineares](./notas-aula/8-outras-estruturas-dados-lineares.pdf)|notas|
+|9|[Algoritmos de busca](./notas-aula/9-algoritmos-busca.pdf)|notas|
+|10|[Algoritmos de ordenação](./notas-aula/10-algoritmos-ordenacao.pdf)|notas|
+|11|[Árvores](./notas-aula/11-arvores.pdf)|slides|
+|12|[Heaps](./notas-aula/12-heaps.pdf)|slides|
+|13|[Emparelhamento estável](./notas-aula/13-emparelhamento-estavel.pdf)|slides|
+|14|[Grafos](./notas-aula/14-grafos.pdf)|slides|
+|15|[Busca de caminhos em grafos](./notas-aula/15-busca-caminhos.pdf)|slides|
+|16|[Árvore geradora mínima](./notas-aula/16-arvore-geradora-minima.pdf)|slides|
 
 O diretório [src](./src) fornece implementações em Java das estruturas de dados lineares e de alguns algoritmos de busca e ordenação [baseadas em Goodrich, Tamassia e Goldwasser (2014)]. Exemplos, aplicações e materiais complementares poderão ser incluídos aqui futuramente.
 
