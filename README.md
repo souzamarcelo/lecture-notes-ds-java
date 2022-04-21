@@ -54,7 +54,7 @@ Marcelo de Souza (2020), Notas de Aula: Algoritmos e Estruturas de Dados. Online
     title =        {Notas de Aula: Algoritmos e Estruturas de Dados},
     author =       {Marcelo de Souza}, 
     howPublished = {\url{https://github.com/souzamarcelo/lecture-notes-ds-java}}, 
-    year =         {2018},
+    year =         {2020},
     note =         {Creative Commons BY-NC-ND 4.0.}
 }
 ```
